@@ -23,7 +23,7 @@ def plot_confusion_matrix(label,prediction,class_names):
     num_labels = len(class_names)
     max_value  = np.max([np.max(np.unique(label)),np.max(np.unique(label))])
     assert max_value < num_labels
-    mat,_,_,im = ax.hist2d(prediction, label
+    mat,_,_,im = ax.hist2d(prediction, label,
                            bins=(num_labels,num_labels),
                            range=((-0.5,num_labels-0.5),(-0.5,num_labels-0.5)),cmap=plt.cm.Blues)
     plt.colorbar(im, ax=ax)
