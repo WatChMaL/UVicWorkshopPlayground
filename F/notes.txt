@@ -1,0 +1,11 @@
+Goal: e/pi0 separation using CNN
+
+Notes:
+- start with all of Data Set C
+- check for dependence on end-cap activity
+	- modify event pre-selection if necessary
+- check for dependence on visible energy
+	- modify event pre-selection if necessary
+- check for dependence on reconstructed pi0 mass
+	- add to MLP to possibly improve CNN performance
+
