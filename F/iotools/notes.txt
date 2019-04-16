@@ -1,0 +1,32 @@
+Goal:
+
+Add new class:
+
+  class H5SelectedDataset:
+
+  - uses a pre-defined subset of events that pass an event selection
+  - includes a new keyword, selection='mySelection.sel'
+
+usage example:
+
+train_loader=loader_factory('H5SelectedDataset', batch_size=64, shuffle=True, num_workers=4, data_dirs=DATA_DIRS, flavour='100k.h5', start_fraction=0.0, use_fraction=0.1, selection='mySelection.sel')
+
+
+
+Add a new abstract class:
+
+  H5MakeSelection:
+
+  - inherit this class and provide the method:
+    - eventSelected(eventData)
+
+
+usage example
+
+  mySelection = H5MakeSelection(data_dirs=DATA_DIRS, flavour='100k.h5', mySelectionMethod)
+  n = mySelection.number
+  if n>0:
+     mySelection.save('mySelection.sel')
+  
+
+  
