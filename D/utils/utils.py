@@ -33,8 +33,8 @@ def plot_confusion_matrix(label,prediction,class_names):
              rotation_mode="anchor")
     plt.setp(ax.get_yticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
-    ax.set_xlabel('Prediction',fontsize=20)
-    ax.set_ylabel('True Label',fontsize=20)
+    ax.set_ylabel('Prediction',fontsize=20)
+    ax.set_xlabel('True Label',fontsize=20)
     for i in range(mat.shape[0]):
         for j in range(mat.shape[1]):
             ax.text(i,j, str(mat[i, j]),
