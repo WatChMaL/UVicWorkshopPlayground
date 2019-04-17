@@ -39,7 +39,10 @@ def forward(blob,train=True):
     with torch.set_grad_enabled(train):
         # Prediction
         data = torch.as_tensor(blob.data).cuda()#[torch.as_tensor(d).cuda() for d in blob.data]
+        # Permute order to event, qt, x, y
         data = data.permute(0,3,1,2)
+        # Select q channel only (drop t)
+        data = data[:,[0],:,:]
         prediction = blob.net(data)
         # Training
         loss,acc=-1,-1
@@ -93,7 +96,12 @@ def train_loop(blob,train_epoch=2.,store_iterations=500,store_prefix='snapshot')
         for i,data in enumerate(train_loader):
             # Data and label
             blob.data,blob.label = data[0:2]
+            # If a multi-ring then sum labels
+            #if not len(blob.label.shape) == 1:
+            #    blob.label = np.array(blob.label)
+            #    blob.label = np.sum(blob.label, axis=1)
             # Call forward: make a prediction & measure the average error
+            #print(blob.label)
             res = forward(blob,True)
             # Call backward: backpropagate error and update weights
             backward(blob)

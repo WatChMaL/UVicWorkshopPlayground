@@ -177,7 +177,7 @@ def plot_log(train_log_name,test_log_name=None):
     
     # added these four lines
     labels = [l.get_label() for l in lines]
-    leg    = ax1.legend(lines, labels, fontsize=16, loc=5)
+    leg    = ax1.legend(lines, labels, fontsize=16, loc=1)
     leg_frame = leg.get_frame()
     leg_frame.set_facecolor('white')
     
