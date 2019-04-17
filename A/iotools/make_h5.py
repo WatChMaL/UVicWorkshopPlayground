@@ -31,7 +31,6 @@ def make_h5(file_list,output_file):
         for key in f.keys():
             data_shape = f[key].shape
             if len(data_shape) < 2:
-                print(key)
                 if not key in out_1darray: out_1darray[key]=f[key].astype(np.float32)
                 else: out_1darray[key] = np.hstack([out_1darray[key],f[key].astype(np.float32)])
             else:
