@@ -145,9 +145,15 @@ class H5Dataset(Dataset):
             data_size = f[self._keys[0]].shape[0]
             start_entry = int(start_fraction * data_size)
             num_entries = int(use_fraction * data_size)
-            self._event_to_file_index += [file_index] * num_entries
-            self._event_to_entry_index += range(start_entry, start_entry+num_entries)
+#            self._event_to_file_index += [file_index] * num_entries
+#            self._event_to_entry_index += range(start_entry, start_entry+num_entries)
+            for entry_index in range(start_entry, start_entry+num_entries):
+                energy = sum(f['energies'][entry_index])
+                if(energy > 100 and energy < 1000):
+                    self._event_to_file_index += [file_index]
+                    self._event_to_entry_index += [entry_index]
             f.close()
+        print(len(self._event_to_entry_index)," events selected")
             
     def __len__(self):
         return len(self._event_to_file_index)
@@ -164,6 +170,8 @@ class H5Dataset(Dataset):
             result.append(fh[key][entry_index])
         result.append(idx)
         result.append(entry_index)
+        if self._transform is not None:
+            data = self._transform(result)
         return tuple(result)
         #return fh['event_data'][entry_index],fh['labels'][entry_index],idx,entry_index
 
