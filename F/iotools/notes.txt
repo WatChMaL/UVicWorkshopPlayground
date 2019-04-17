@@ -13,17 +13,14 @@ train_loader=loader_factory('H5SelectedDataset', batch_size=64, shuffle=True, nu
 
 
 
-Add a new abstract class:
+Add a new class:
 
-  H5MakeSelection:
-
-  - inherit this class and provide the method:
-    - eventSelected(eventData)
+  MakeSelection:
 
 
 usage example
 
-  mySelection = H5MakeSelection(data_dirs=DATA_DIRS, flavour='100k.h5', mySelectionMethod)
+  mySelection = MakeSelection(data_dirs=DATA_DIRS, flavour='100k.h5', mySelectionMethod)
   n = mySelection.number
   if n>0:
      mySelection.save('mySelection.sel')
