@@ -164,6 +164,7 @@ class H5Dataset(Dataset):
             result.append(fh[key][entry_index])
         result.append(idx)
         result.append(entry_index)
+        result.append(file_index)
         return tuple(result)
         #return fh['event_data'][entry_index],fh['labels'][entry_index],idx,entry_index
 
