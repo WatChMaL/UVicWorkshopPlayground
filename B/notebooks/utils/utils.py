@@ -115,20 +115,20 @@ class CSVData:
 
 def disp_learn_hist(train_log,val_log):
 
-    train_log = pd.read_csv(train_log.name)
-    val_log  = pd.read_csv(val_log.name)
+    train_log_csv = pd.read_csv(train_log.name)
+    val_log_csv  = pd.read_csv(val_log.name)
 
     fig, ax1 = plt.subplots(figsize=(12,8),facecolor='w')
-    line11 = ax1.plot(train_log.epoch, train_log.loss, linewidth=2, label='Train loss', color='b', alpha=0.3)
-    line12 = ax1.plot(val_log.epoch, val_log.loss, marker='o', markersize=12, linestyle='', label='Validation loss', color='blue')
+    line11 = ax1.plot(train_log_csv.epoch, train_log_csv.loss, linewidth=2, label='Train loss', color='b', alpha=0.3)
+    line12 = ax1.plot(val_log_csv.epoch, val_log_csv.loss, marker='o', markersize=12, linestyle='', label='Validation loss', color='blue')
     ax1.set_xlabel('Epoch',fontweight='bold',fontsize=24,color='black')
     ax1.tick_params('x',colors='black',labelsize=18)
     ax1.set_ylabel('Loss', fontsize=24, fontweight='bold',color='b')
     ax1.tick_params('y',colors='b',labelsize=18)
     
     ax2 = ax1.twinx()
-    line21 = ax2.plot(val_log.epoch, val_log.accuracy, linewidth=2, label='Train accuracy', color='r', alpha=0.3)
-    line22 = ax2.plot(val_log.epoch, val_log.accuracy, marker='o', markersize=12, linestyle='', label='Validation accuracy', color='red')
+    line21 = ax2.plot(val_log_csv.epoch, val_log_csv.accuracy, linewidth=2, label='Train accuracy', color='r', alpha=0.3)
+    line22 = ax2.plot(val_log_csv.epoch, val_log_csv.accuracy, marker='o', markersize=12, linestyle='', label='Validation accuracy', color='red')
     
     ax2.set_ylabel('Accuracy', fontsize=24, fontweight='bold',color='r')
     ax2.tick_params('y',colors='r',labelsize=18)
@@ -143,3 +143,46 @@ def disp_learn_hist(train_log,val_log):
 
     plt.grid()
     plt.show()
+    
+
+def moving_average(a, n=3) :
+    ret = np.cumsum(a, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    return ret[n - 1:] / n
+
+
+def disp_train_smoothed(train_log,val_log):
+    train_log_csv = pd.read_csv(train_log.name)
+    val_log_csv  = pd.read_csv(val_log.name)
+
+    epoch    = moving_average(np.array(train_log_csv.epoch),40)
+    accuracy = moving_average(np.array(train_log_csv.accuracy),40)
+    loss     = moving_average(np.array(train_log_csv.loss),40)
+
+    fig, ax1 = plt.subplots(figsize=(12,8),facecolor='w')
+    line11 = ax1.plot(train_log_csv.epoch, train_log_csv.loss, linewidth=2, label='Loss', color='b', alpha=0.3)
+    line12 = ax1.plot(epoch, loss, label='Loss (averaged)', color='blue')
+    ax1.set_xlabel('Epoch',fontweight='bold',fontsize=24,color='black')
+    ax1.tick_params('x',colors='black',labelsize=18)
+    ax1.set_ylabel('Loss', fontsize=24, fontweight='bold',color='b')
+    ax1.tick_params('y',colors='b',labelsize=18)
+    
+    ax2 = ax1.twinx()
+    line21 = ax2.plot(train_log_csv.epoch, train_log_csv.accuracy, linewidth=2, label='Accuracy', color='r', alpha=0.3)
+    line22 = ax2.plot(epoch, accuracy, label='Accuracy (averaged)', color='red')
+    
+    ax2.set_ylabel('Accuracy', fontsize=24, fontweight='bold',color='r')
+    ax2.tick_params('y',colors='r',labelsize=18)
+    ax2.set_ylim(0.,1.0)
+    
+    # added these four lines
+    lines  = line11 + line12 + line21 + line22
+    labels = [l.get_label() for l in lines]
+    leg    = ax1.legend(lines, labels, fontsize=16, loc=5)
+    leg_frame = leg.get_frame()
+    leg_frame.set_facecolor('white')
+    
+    plt.grid()
+    plt.show()
+
+    
