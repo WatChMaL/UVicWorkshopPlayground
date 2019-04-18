@@ -100,7 +100,7 @@ class NPZDatabuf(Dataset):
 
 class H5Dataset(Dataset):
     
-    def __init__(self, data_dirs, transform=None, flavour=None, limit_num_files=0, start_fraction=0., use_fraction=1.0, read_keys=[]):
+    def __init__(self, data_dirs, transform=None, flavour=None, limit_num_files=0, start_fraction=0., use_fraction=1.0, read_keys=[], energy_min=0, energy_max=2000):
         """
         Args: data_dirs ... a list of data directories to find files (up to 10 files read from each dir)
               transform ... a function applied to pre-process data 
@@ -140,6 +140,7 @@ class H5Dataset(Dataset):
         self._file_handles = [None] * len(self._files)
         self._event_to_file_index  = []
         self._event_to_entry_index = []
+        mass={11:0.511,-11:0.511,13:105,-13:105,111:135}
         for file_index, file_name in enumerate(self._files):
             f = h5py.File(file_name,mode='r')
             data_size = f[self._keys[0]].shape[0]
@@ -148,8 +149,8 @@ class H5Dataset(Dataset):
 #            self._event_to_file_index += [file_index] * num_entries
 #            self._event_to_entry_index += range(start_entry, start_entry+num_entries)
             for entry_index in range(start_entry, start_entry+num_entries):
-                energy = sum(f['energies'][entry_index])
-                if(energy > 100 and energy < 1000):
+                energy = sum(f['energies'][entry_index])-sum([mass[i] for i in f['pids'][entry_index]])
+                if(energy > energy_min and energy < energy_max):
                     self._event_to_file_index += [file_index]
                     self._event_to_entry_index += [entry_index]
             f.close()
