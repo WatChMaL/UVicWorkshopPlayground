@@ -131,6 +131,8 @@ class H5Dataset(Dataset):
         assert 'event_data' in f.keys()
         assert 'labels' in f.keys()
         self._keys = ['event_data','labels']
+        print('available data arrays:')
+        print(f.keys())
         for key in read_keys:
             if not key in f.keys():
                 print('Key',key,'not found in h5 file',self._files[0])
